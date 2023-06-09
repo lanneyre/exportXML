@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+- phpMyAdmin XML Dump
+- version 5.2.0
+- https://www.phpmyadmin.net
+-
+- Hôte : localhost:3306
+- Généré le : jeu. 08 juin 2023 à 13:50
+- Version du serveur : 10.7.3-MariaDB-log
+- Version de PHP : 8.1.8
+-->
+
+<pma_xml_export version="1.0" xmlns:pma="https://www.phpmyadmin.net/some_doc_url/">
+    <!--
+    - Structure schemas
+    -->
+    <pma:structure_schemas>
+        <pma:database name="cdcxml" collation="utf8mb4_general_ci" charset="utf8mb4">
+            <pma:table name="certificateur">
+                CREATE TABLE `certificateur` (
+                  `idClient` varchar(8) NOT NULL,
+                  `idContrat` varchar(20) NOT NULL,
+                  `emetteur` varchar(8) NOT NULL,
+                  PRIMARY KEY (`idClient`),
+                  KEY `emetteur` (`emetteur`),
+                  CONSTRAINT `certificateur_ibfk_1` FOREIGN KEY (`emetteur`) REFERENCES `emetteur` (`idClient`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="certification">
+                CREATE TABLE `certification` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `type` enum(&#039;RNCP&#039;,&#039;RS&#039;,&#039;Diplôme d&#039;&#039;Etablissement&#039;,&#039;Diplôme Universitaire&#039;,&#039;Habilitation&#039;,&#039;Reconnaissance&#039;) NOT NULL,
+                  `code` varchar(100) NOT NULL,
+                  `natureDeposant` enum(&#039;CERTIFICATEUR&#039;,&#039;TIERS_CONFIANCE&#039;) DEFAULT NULL,
+                  `certificateur` varchar(8) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="emetteur">
+                CREATE TABLE `emetteur` (
+                  `idClient` varchar(8) NOT NULL,
+                  `flux` varchar(50) NOT NULL,
+                  PRIMARY KEY (`idClient`),
+                  KEY `flux` (`flux`),
+                  CONSTRAINT `emetteur_ibfk_1` FOREIGN KEY (`flux`) REFERENCES `flux` (`idFlux`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="flux">
+                CREATE TABLE `flux` (
+                  `idFlux` varchar(50) NOT NULL,
+                  `horodatage` datetime NOT NULL,
+                  PRIMARY KEY (`idFlux`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="modalitesinscription">
+                CREATE TABLE `modalitesinscription` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `modaliteAcces` enum(&#039;FORMATION_INITIALE_HORS_APPRENTISSAGE&#039;,&#039;FORMATION_INITIALE_APPRENTISSAGE&#039;,&#039;FORMATION_CONTINUE_HORS_CONTRAT_DE_PROFESSIONNALISATION&#039;,&#039;FORMATION_CONTINUE_CONTRAT_DE_PROFESSIONNALISATION&#039;,&#039;VAE&#039;,&#039;EQUIVALENCE_(DIPLOME_ETRANGER)&#039;,&#039;CANDIDAT_LIBRE&#039;,&#039;nil&#039;) NOT NULL DEFAULT &#039;nil&#039;,
+                  `voieAccessVAE` enum(&#039;CONGES_VAE&#039;,&#039;VAE_CLASSIQUE&#039;) DEFAULT NULL,
+                  `initiativeInscription` enum(&#039;CERTIFIE&#039;,&#039;OF&#039;,&#039;POLE_EMPLOI&#039;,&#039;EMPLOYEUR&#039;,&#039;AUTRE&#039;) DEFAULT NULL,
+                  `dateInscription` date DEFAULT NULL,
+                  `passageCertification` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="niveaunumeriqueeuropeen">
+                CREATE TABLE `niveaunumeriqueeuropeen` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `scoreGeneral` int(11) DEFAULT NULL,
+                  `passageCertification` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `passageCertification` (`passageCertification`),
+                  CONSTRAINT `niveaunumeriqueeuropeen_ibfk_1` FOREIGN KEY (`passageCertification`) REFERENCES `passagecertification` (`idTechnique`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="passagecertification">
+                CREATE TABLE `passagecertification` (
+                  `idTechnique` varchar(255) NOT NULL,
+                  `urlPreuve` varchar(255) DEFAULT NULL,
+                  `libelleOption` varchar(255) DEFAULT NULL,
+                  `obtentionCertification` enum(&#039;PAR_ADMISSION&#039;,&#039;PAR_SCORING&#039;) NOT NULL,
+                  `donneeCertifiee` tinyint(1) NOT NULL,
+                  `dateDebutExamen` date DEFAULT NULL,
+                  `dateFinExamen` date DEFAULT NULL,
+                  `modalitePassageExamen` enum(&#039;A_DISTANCE&#039;,&#039;EN_PRESENTIEL&#039;,&#039;MIXTE&#039;) DEFAULT NULL,
+                  `codePostalCentreExamen` varchar(9) DEFAULT NULL,
+                  `dateDebutValidite` date DEFAULT NULL,
+                  `dateFinValidite` date NOT NULL,
+                  `presenceNiveauLangueEuro` tinyint(1) NOT NULL,
+                  `niveauLangueEuropeen` enum(&#039;C2&#039;,&#039;C1&#039;,&#039;B2&#039;,&#039;B1&#039;,&#039;A2&#039;,&#039;A1&#039;,&#039;INSUFFISANT&#039;) DEFAULT NULL,
+                  `presenceNiveauNumeriqueEuro` tinyint(1) NOT NULL,
+                  `scoring` varchar(255) NOT NULL DEFAULT &#039;nil&#039;,
+                  `mentionValidee` enum(&#039;SANS_MENTION&#039;,&#039;MENTION_ASSEZ_BIEN&#039;,&#039;MENTION_BIEN&#039;,&#039;MENTION_TRES_BIEN&#039;,&#039;MENTION_TRES_BIEN_AVEC_FELICITATIONS_DU_JURY&#039;) NOT NULL DEFAULT &#039;SANS_MENTION&#039;,
+                  `verbatim` varchar(255) DEFAULT NULL,
+                  `certification` int(11) NOT NULL,
+                  PRIMARY KEY (`idTechnique`),
+                  KEY `certification` (`certification`),
+                  CONSTRAINT `passagecertification_ibfk_1` FOREIGN KEY (`certification`) REFERENCES `certification` (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="resultat">
+                CREATE TABLE `resultat` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `niveau` int(11) DEFAULT NULL,
+                  `domaineCompetenceId` varchar(1) DEFAULT NULL,
+                  `competenceId` varchar(1) DEFAULT NULL,
+                  `niveaunumeriqueeuropeen` int(11) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `niveaunumeriqueeuropeen` (`niveaunumeriqueeuropeen`),
+                  CONSTRAINT `resultat_ibfk_1` FOREIGN KEY (`niveaunumeriqueeuropeen`) REFERENCES `niveaunumeriqueeuropeen` (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+            <pma:table name="titulaire">
+                CREATE TABLE `titulaire` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `nomNaissance` varchar(60) NOT NULL,
+                  `nomUsage` varchar(60) NOT NULL DEFAULT &#039;nil&#039;,
+                  `prenom1` varchar(60) NOT NULL,
+                  `prenom2` varchar(60) DEFAULT NULL,
+                  `prenom3` varchar(60) DEFAULT NULL,
+                  `anneeNaissance` int(11) NOT NULL,
+                  `moisNaissance` int(11) NOT NULL,
+                  `jourNaissance` int(11) NOT NULL,
+                  `sexe` enum(&#039;F&#039;,&#039;M&#039;) NOT NULL,
+                  `codeInsee` varchar(5) DEFAULT NULL,
+                  `codePostal` varchar(9) DEFAULT NULL,
+                  `libelleCommuneNaissance` varchar(40) DEFAULT NULL,
+                  `codePaysNaissance` varchar(3) DEFAULT NULL,
+                  `libellePaysNaissance` varchar(40) DEFAULT NULL,
+                  `passagecertification` varchar(255) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY `passagecertification` (`passagecertification`),
+                  CONSTRAINT `titulaire_ibfk_1` FOREIGN KEY (`passagecertification`) REFERENCES `passagecertification` (`idTechnique`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            </pma:table>
+        </pma:database>
+    </pma:structure_schemas>
+
+    <!--
+    - Base de données : 'cdcxml'
+    -->
+    <database name="cdcxml">
+        <!-- Table certificateur -->
+        <!-- Table certification -->
+        <!-- Table emetteur -->
+        <!-- Table flux -->
+        <!-- Table modalitesinscription -->
+        <!-- Table niveaunumeriqueeuropeen -->
+        <!-- Table passagecertification -->
+        <!-- Table resultat -->
+        <!-- Table titulaire -->
+    </database>
+</pma_xml_export>
