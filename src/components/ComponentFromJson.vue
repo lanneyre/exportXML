@@ -26,10 +26,34 @@
                 
                     // Then specify how you want your dates to be formatted
                 return date.format("YYYY-MM-DDThh:mm");
+            }, 
+            displayBlock(event){
+                console.log("test display", event.target.parentElement.nextSibling);
+                const valeur = event.target.innerText
+                if(valeur === "+"){
+                    // on déplie 
+                    event.target.innerText = "-"
+                    event.target.parentElement.nextSibling.classList.add("active")
+                } else {
+                    // on replie
+                    event.target.innerText = "+"
+                    event.target.parentElement.nextSibling.classList.remove("active")
+                }
+            }, deleteBloc(event){     
+                const bloc = event.target.parentElement.parentElement;
+                const blocs = bloc.parentElement.children.length;
+
+                if(blocs > 1){
+                    // alert("je supprime");
+                    bloc.remove();
+                } else {
+                    alert('Impossible de supprimer le dernier élément') 
+                }
+
             }
         },
         mounted(){
-                console.log(typeof this.dataFromJson);
+                //console.log(typeof this.dataFromJson);
                 
         }  
     }
@@ -42,21 +66,23 @@
         <!-- boucler pour afficher le formulaire en fonction du json  -->
         <!-- {{ Array.isArray(elt) }} -->
         <fieldset v-if="(typeof elt == 'object' && !Array.isArray(elt))">
-            <legend>{{ capitalized(key) }}</legend> 
-            <ComponentFromJson :dataFromJson="elt" />
+            <legend>{{ capitalized(key) }} <span class="plus" @click="displayBlock">+</span></legend>
+            <div class="componentFromJson">
+                <ComponentFromJson :dataFromJson="elt" class="" />
+            </div> 
         </fieldset>
         <div v-else-if="Array.isArray(elt)">
-            <div  v-for="e in elt" v-bind:key="e">
+            <button class="btn" @click="elt.push(elt[0])">Ajouter un bloc</button>
+            <fieldset v-for="(e, key) in elt" v-bind:key="key" class="blocArray">
+                <legend><button class="btn" @click="deleteBloc">Retirer ce bloc</button></legend>
                 <ComponentFromJson :dataFromJson="e" />
-                <hr />
-            </div>
+            </fieldset>
         </div>
         <div v-else>
             <label :for="key">{{ capitalized(key) }}</label>
             <input 
                 :type="(typeof elt == 'string' && (key == 'horodatage' || key == 'dateInscription' || key == 'dateDebutExamen' || key == 'dateFinExamen' || key == 'dateDebutValidite' || key == 'dateFinValidite')) ? 'datetime-local' : typeof elt" 
                 :name="key" 
-                :value="(typeof elt == 'string' && (key == 'horodatage' || key == 'dateInscription' || key == 'dateDebutExamen' || key == 'dateFinExamen' || key == 'dateDebutValidite' || key == 'dateFinValidite')) ? formatDate(elt) : elt" 
                 :id="key" />
         </div>
         
@@ -88,5 +114,36 @@ legend{
     padding: 0 0.5rem;
     color: darkblue;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.plus{
+    border: 1px solid darkblue;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.componentFromJson{
+    display: none;
+}
+.componentFromJson.active{
+    display: block;
+}
+.blocArray{
+    border: 1px solid darkblue;
+    padding: 5px;
+    border-radius: 10px;
+}
+.btn{
+    border: 1px solid darkblue;
+    color: darkblue;
+    border-radius: 5px;
 }
 </style>
