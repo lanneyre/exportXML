@@ -25,33 +25,83 @@ import ComponentFromJson from "../components/ComponentFromJson.vue"
         console.log(msg);
         
       },
-      generateXML: function(event:Event, elt:HTMLFieldSetElement|undefined|null) {
-        let bloc:NodeListOf<HTMLFieldSetElement>|null = null;
-        //this.alert("generatexml");
-        if (elt === null){
-          this.alert("null");
-        } else if(typeof elt === 'undefined'){
-          bloc = document.querySelectorAll("fieldset");
-          // this.alert("undefined")
+      generateXML: function(elt:HTMLFieldSetElement|undefined|null) {
+        let blocs:NodeListOf<HTMLFieldSetElement>|null; 
+        let bloc:HTMLFieldSetElement;
+        let niveau:number = 1;
+        let xml:String = "";
+        if(typeof elt !== 'undefined' && elt !== null){
+          niveau = Number(elt.getAttribute("niveau"))
+          bloc = elt
         } else {
-          bloc = elt.querySelectorAll("fieldset");
-          // this.alert("fieldset");
+          xml = '<?xml version="1.0" encoding="UTF-8"?>'+"\n"
+          blocs = document.querySelectorAll("fieldset[niveau='1']");
+          bloc = blocs[0];
         }
-
-        if(bloc !== null){
-
-          // this.alert(bloc.filters)
-          for (const blocChild of bloc){
-            
-            //this.alert(inp)
-          }
-          const inp = bloc[0].querySelectorAll("div.componentFromJson > div."+bloc[0].className+" > div > div.champs > input");
-          //  this.alert(bloc)
-          this.alert(inp)
-          this.generateXML(event, bloc[0])
+      
+        let baliseO = ""
+        for (let index = 0; index < niveau-1; index++) {
+          baliseO += "\t";
+        } 
+        baliseO += "<cpf:"
+        if(bloc.className === "blocArray"){
+          baliseO += bloc.getAttribute('name')
+        } else {
+          baliseO += bloc.className
         }
-
+        if(bloc.className == "flux") {
+          baliseO += ' xmlns:cpf="urn:cdc:cpf:pc5:schema:1.0.0"'
+        }
+        baliseO += '>'
+        //ouverture balise          
+        xml += baliseO+"\n";
+        //on récupère les inputs 
+        const inputs:NodeListOf<HTMLInputElement>|null = bloc.querySelectorAll("input[niveau='"+niveau+"']")
+        let inputsToXML:String = ""
+        inputs.forEach(input => { 
+          for (let index = 0; index < niveau; index++) {
+            inputsToXML += "\t";
+          }           
+          inputsToXML += "<cpf:"+input.name+">"+input.value+"</cpf:"+input.name+">\n"
+        })
+        xml += ""+inputsToXML;
         
+        // on parcours les fieldsets enfants de niveau +1           
+        const fieldsets:NodeListOf<HTMLFieldSetElement>|null = bloc.querySelectorAll("fieldset[niveau='"+(niveau+1)+"']");
+        fieldsets.forEach(fieldset => {
+          console.log(fieldset);
+          
+          xml += ""+this.generateXML(fieldset)
+        })
+          
+          
+        for (let index = 0; index < niveau-1; index++) {
+          xml += "\t";
+        } 
+        // fermeture balise
+        if(bloc.className === "blocArray"){
+          xml += "</cpf:"+bloc.getAttribute('name')+">\n";
+        } else {
+          xml += "</cpf:"+bloc.className+">\n";
+        }
+
+        return xml;
+      }, 
+      createXml: function(evt:Event){
+        // console.log(this.generateXML());
+        // ici on va générer un fichier téléchargeable
+
+        const blob = new Blob([""+this.generateXML()], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'cpf.xml');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        //document.getElementById("resultat").innerText = ""+this.generateXML()
+        //console.log();
       }
     } 
   }
@@ -59,8 +109,9 @@ import ComponentFromJson from "../components/ComponentFromJson.vue"
 
 <template>
   <div id="form">
-    <ComponentFromJson :dataFromJson="json" />
-    <img src="@/assets/xml.png" alt="GenerateXML" id="GenerateXML" @click="generateXML">
+    <ComponentFromJson :dataFromJson="json" :niveau=1 />
+    <pre><code id="resultat"></code></pre>
+    <img src="@/assets/xml.png" alt="GenerateXML" id="GenerateXML" @click="createXml">
   </div>
 </template>
 

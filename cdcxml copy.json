@@ -1,7 +1,7 @@
 {
-  "flux" : {  
+  "flux": {
     "idFlux": "6e3c7378-bda4-497a-9bd6-dc203f903ed9",
-    "horodatage": 12341564789,
+    "horodatage": "2020-12-18T14:24:12+01:00",
     "emetteur": {
       "idClient": "AB123CDE",
       "certificateurs": {
