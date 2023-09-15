@@ -25,7 +25,7 @@ import ComponentFromJson from "../components/ComponentFromJson.vue"
         console.log(msg);
         
       },
-      generateXML: function(elt:HTMLFieldSetElement|undefined|null) {
+      generateXML: function(elt?:HTMLFieldSetElement|undefined|null) {
         let blocs:NodeListOf<HTMLFieldSetElement>|null; 
         let bloc:HTMLFieldSetElement;
         let niveau:number = 1;

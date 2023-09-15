@@ -9,7 +9,10 @@
         },
         props:{
             dataFromJson: Object,
-            niveau:Number
+            niveau:{
+                type: Number,
+                required: true
+            }
         },
         computed:{
 
@@ -30,27 +33,44 @@
             }, 
             displayBlock(event:Event){
                 // console.log("test display", event.target.parentElement.nextSibling);
-                const valeur = event.target.innerText
-                if(valeur === "+"){
-                    // on déplie 
-                    event.target.innerText = "-"
-                    event.target.parentElement.nextSibling.classList.add("active")
-                } else {
-                    // on replie
-                    event.target.innerText = "+"
-                    event.target.parentElement.nextSibling.classList.remove("active")
+                if(event.target !== null){
+                    const evtTgt = event.target as HTMLElement
+                    const valeur = evtTgt.innerText
+                    if(valeur === "+"){
+                        // on déplie 
+                        evtTgt.innerText = "-"
+                        if(evtTgt.parentElement !== null && evtTgt.parentElement.nextSibling !== null){
+                            const e = evtTgt.parentElement.nextSibling as HTMLElement
+                            e.classList.add("active")
+                        }
+                    } else {
+                        // on replie
+                        evtTgt.innerText = "+"
+                        if(evtTgt.parentElement !== null && evtTgt.parentElement.nextSibling !== null){
+                            const e = evtTgt.parentElement.nextSibling as HTMLElement
+                            e.classList.remove("active")
+                        }
+                    }
                 }
+                
             }, 
-            deleteBloc(event:Event){     
-                const bloc = event.target.parentElement.parentElement;
-                const blocs = bloc.parentElement.children.length;
+            deleteBloc(event:Event){ 
+                const e = event.target as HTMLElement 
+                if(event.target !== null && e.parentElement !== null){
+                    const bloc = e.parentElement.parentElement;
+                    if(bloc !== null && bloc.parentElement !== null) {
+                        const blocs = bloc.parentElement.children.length;
 
-                if(blocs > 0){
-                    // alert("je supprime");
-                    bloc.remove();
-                } else {
-                    alert('Impossible de supprimer le dernier élément') 
-                }
+                        if(blocs > 0){
+                            // alert("je supprime");
+                            bloc.remove();
+                        } else {
+                            alert('Impossible de supprimer le dernier élément') 
+                        }
+                    }
+                    
+                }   
+                
 
             }
         },
@@ -63,7 +83,7 @@
 </script>
 
 <template>
-  <div v-if="Object.keys(dataFromJson).length > 0">
+  <div v-if="Object.keys(dataFromJson as Object).length > 0">
     <div v-for="(elt, key) in dataFromJson" v-bind:key="key" >
         <!-- boucler pour afficher le formulaire en fonction du json  -->
         <fieldset v-if="(typeof elt == 'object' && !Array.isArray(elt))" :class="key" :niveau="niveau">
