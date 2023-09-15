@@ -88,7 +88,7 @@
         <!-- boucler pour afficher le formulaire en fonction du json  -->
         <fieldset v-if="(typeof elt == 'object' && !Array.isArray(elt))" :class="key" :niveau="niveau">
             <legend>{{ capitalized(key) }} <span class="plus" @click="displayBlock">+</span></legend>
-            <div class="componentFromJson active">
+            <div class="componentFromJson">
                 <ComponentFromJson :dataFromJson="elt" :class="key" :niveau="niveau+1" />
             </div> 
         </fieldset>
