@@ -1,0 +1,10 @@
+id;nom;balise;definition;parent
+1;Flux;cpf:flux;BLOC 1 : DONNEES DE SUIVI DU FLUX;0
+2;Emetteur;cpf:emetteur;BLOC 2 : DONNEES DE L'EMETTEUR DU FLUX balise XML : <cpf:emetteur>;1
+3;Certificateur;cpf:certificateur;BLOC 3 : DONNEES D'IDENTIFICATION DU CERTIFICATEUR balise XML : Une balise <cpf:certificateur> pour chaque certificateur;2
+4;Certification;cpf:certification;BLOC 4 : DONNEES RELATIVES A LA CERTIFICATION balise XML : Une balise <cpf:certification> pour chaque certification;3
+5;Passage Certification;cpf:passageCertification;BLOC 5 : DONNEES RELATIVES AUX PASSAGES DE CERTIFICATION balise XML : Une balise <cpf:passageCertification> pour chaque passage de certification;4
+6;Niveau Numérique Européen;cpf:niveauNumeriqueEuropeen;"Ce bloc est à compléter uniquement si la donnée #5.13 (Présence du Niveau Numérique Européen) est à ""true"". La donnée ""Score général DIGCOMP"" est à renseigner une seule fois. Les données marquées comme ""A remplir une fois par compétence"" seront à renseigner une fois par compétence au sein du fichier XML, via une liste de balises <resultat> ayant chacune une balise par donnée concernée.";5
+7;Modalitées Inscription;cpf:modalitesInscription;BLOC 7 : DONNEES RELATIVES AUX MODALITES D'INSCRIPTION A LA CERTIFICATION balise XML : <cpf:modalitesInscription>;5
+8;Titulaire;cpf:titulaire;Choix exclusif de complétion du Bloc 8 ou du Bloc 9.;7
+9;Dossier Formation;cpf:dossierFormation;"Le bloc 9 est optionnel. Si ce dernier est complété, le bloc 8 ne sera pas obligatoire. On parle de choix exclusif entre le bloc 8 et le bloc 9. Ce bloc est à compléter si et uniquement si le certificateur dispose du numéro de dossier CPF du titulaire de la certification. A noter : Il sera néanmoins possible de fournir un fichier comprenant à la fois des données titulaires complétées via le bloc 8, et d'autres données de titulaires présentant les données du bloc 9 complétées.";7

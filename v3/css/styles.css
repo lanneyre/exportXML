@@ -1,0 +1,38 @@
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-weight: 400;
+}
+body{
+    margin: 1rem;
+}
+fieldset,
+section {
+    width: 100%;
+    margin: 1rem 0;
+    border-color: #d3d3d3;
+    border-style: double;
+}
+
+legend{
+    padding: 0 .5rem;
+    color: #00008b;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.champs{
+    margin-bottom: 5px;
+}
+.champs label {
+    width: 40%;
+    display: inline-block;
+    border-bottom: 1px dashed gray;
+}
+
+.champs input {
+    width: 60%;
+}
