@@ -27,25 +27,28 @@ main>section{
     width: 65%;
 }
 
-legend{
-    padding: 0 .5rem;
+legend, h3{
+
     color: #00008b;
     font-weight: 700;
     display: flex;
     align-items: center;
 }
+legend{
+    padding: 0 .5rem;
+}
 
-.champs{
+.blocchamps{
     margin-bottom: 5px;
 }
-.champs label {
-    width: 40%;
+.blocchamps label {
+    width: 60%;
     display: inline-block;
     border-bottom: 1px dashed gray;
 }
 
-.champs input {
-    width: 60%;
+.blocchamps input {
+    width: 39%;
 }
 
 .plus {
@@ -60,4 +63,22 @@ legend{
     margin-left: 10px;
     cursor: pointer;
     text-decoration: none;
+}
+.form{
+    display: flex;
+    flex-direction: column
+}
+#aide{
+    width: 70% ;
+}
+#icons{
+    width: 29%;
+    display: flex;
+}
+#icons img{
+    width: 50%;
+}
+
+.footer{
+    display: flex;
 }

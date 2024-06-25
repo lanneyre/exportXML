@@ -3,6 +3,10 @@
 $queryBlocsSQL = 'SELECT * FROM `blocs` WHERE `parent`=:parent';
 $queryBlocsStatement = $pdo->prepare($queryBlocsSQL);
 
+// On récupère tout le contenu de la table blocs
+$queryBlocsbyidSQL = 'SELECT * FROM `blocs` WHERE `id`=:id';
+$queryBlocsbyidStatement = $pdo->prepare($queryBlocsbyidSQL);
+
 // On récupère tout le contenu de la table champs
 $querychampsSQL = 'SELECT * FROM `champs` WHERE `blocs`=:blocs';
 $querychampsStatement = $pdo->prepare($querychampsSQL);
@@ -26,7 +30,20 @@ $querydatabbyidStatement = $pdo->prepare($qyerydatabbyidSQL);
 $qyerydatacSQL = 'SELECT * FROM `datac` WHERE `datab`=:datab AND identifiantBloc = 1' ;
 $querydatacStatement = $pdo->prepare($qyerydatacSQL);
 
+// On récupère tout le contenu de la table datac en fonction des blocs
+$qyerydatacSQLbyBloc = 'SELECT c.id, c.datab, c.value FROM `datac` AS c JOIN `datab` AS b ON (c.datab = b.id) WHERE b.bloc=:bloc AND c.identifiantBloc = 1';
+$querydatacbyBlocStatement = $pdo->prepare($qyerydatacSQLbyBloc);
 
 // On récupère tout le contenu de la table datac by id
 $qyerydatacbyidSQL = 'SELECT * FROM `datac` WHERE `id`=:id';
 $querydatacbyidStatement = $pdo->prepare($qyerydatacbyidSQL);
+
+
+// On récupère tout le contenu de la table datab by datab et champ
+$qyerydatacbubandc = 'SELECT * FROM `datac` WHERE `datab`=:datab AND `champ`=:champ';
+$querydatacbubandcStatement = $pdo->prepare($qyerydatacbubandc);
+
+
+// Ajout d'un bloc de réponse :
+$queryaddBloc = "INSERT INTO `datab` (`id`, `bloc`) VALUES (NULL, :bloc)";
+$queryaddBlocStatement = $pdo->prepare($queryaddBloc);

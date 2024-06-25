@@ -14,27 +14,43 @@ $pdo = new PDO(
     BDD_PWD
 );
 
+function message($msg){
+    echo "<pre>";
+    var_dump($msg);
+    echo "</pre>";
+}
+
 include ("includes/request.inc.php");
 
-function blocsaside($bloc){
-    global $querydatacStatement, $querydatabStatement, $querychampnombyidStatement;
-    $querydatabStatement->execute([
-        'bloc' => $bloc
+function blocsaside($b){
+    global $queryBlocsbyidStatement, $querydatabStatement, $querydatacStatement;
+    $queryBlocsbyidStatement->execute([
+        'id' => $b
     ]);
-    $blocs = $querydatabStatement->fetchAll(PDO::FETCH_OBJ);
-    // var_dump($blocs);
+    $blocs = $queryBlocsbyidStatement->fetchAll(PDO::FETCH_OBJ);
     $html = "";
-    foreach ($blocs as $bloc) {
-        $querydatacStatement->execute(['datab' => $bloc->id]);
-        $champs = $querydatacStatement->fetchAll(PDO::FETCH_OBJ);
-        //var_dump($champs);
-
-        foreach ($champs as $champ) {
-            $html .= <<<HTML
-            <a href="?datab=$bloc->id">$champ->value</a> <br>
-HTML;
+    if (sizeof($blocs) > 0) {
+        
+        foreach ($blocs as $bloc) {
+            $querydatabStatement->execute(['bloc' => $bloc->id]);
+            $champs = $querydatabStatement->fetchAll(PDO::FETCH_OBJ);
+            if(sizeof($champs) > 0) {
+                foreach ($champs as $champ) {
+                    $querydatacStatement->execute(["datab"=> $champ->id]);
+                    $c = $querydatacStatement->fetch(PDO::FETCH_OBJ);
+                    $nom = empty($c->value) ? "En cours de création" : $c->value;
+                    $id = empty($c->datab) ? $champ->id : $c->datab;
+                    $html .= <<<HTML
+                    <a href="index.php?datab=$id">$nom</a> <br>
+HTML;                  
+                }
+            }
+            else {
+                $html .= '<a href="index.php?datab='.$bloc->id.'">En cours de création</a>  <br>';
+            }            
         }
     }
+    
     return $html;
 }
 
@@ -56,7 +72,6 @@ function aside($parent = 0){
         [[blocsEnfants]]
     </fieldset>
 HTML;
-        blocsaside($bloc->id);
         $html = str_replace("[[champs]]", blocsaside($bloc->id), $html);
         $html = str_replace("[[blocsEnfants]]", aside($bloc->id), $html);
     }
