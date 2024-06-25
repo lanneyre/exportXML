@@ -27,7 +27,7 @@ include("template/templateTop.php");
         }
         echo "<legend>" . $bloc->nom . "</legend>";
     ?>
-        <section>
+        <form>
             <?php
             $html = "";
             foreach ($champs as $champ) {
@@ -50,7 +50,7 @@ HTML;
             }
             echo $html;
             ?>
-        </section>
+        </form>
         <fieldset class="footer">
             <section id="aide">&nbsp; </section>
             <section id="icons">

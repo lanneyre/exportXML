@@ -5,6 +5,9 @@
     margin: 0;
     font-weight: 400;
 }
+a{
+    text-decoration: none;
+}
 body{
     margin: 1rem;
 }
@@ -52,18 +55,24 @@ legend{
 }
 
 .plus {
-    border: 1px solid darkblue;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     display: inline-block;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin-left: 10px;
     cursor: pointer;
     text-decoration: none;
 }
+
+.moins {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .form{
     display: flex;
     flex-direction: column
