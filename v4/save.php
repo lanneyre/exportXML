@@ -10,7 +10,7 @@ include("includes/top.inc.php");
 //message($_POST);
 foreach ($_POST as $key => $value) {
     # code...
-    if($key != "datab"){
+    if($key != "datab" && $key != "parent"){
         $querydatacbubandcStatement->execute(["datab" => $datab, "champ" => $key]);
         $nb = $querydatacbubandcStatement->rowCount();
         if($nb == 0){
@@ -23,6 +23,10 @@ foreach ($_POST as $key => $value) {
             // on update
             $queryupdatedatacBlocStatement->execute([":datab" => $datab, ":champ" => $key, ":value" => $value]);
         }
+    }
+
+    if($key == "parent"){
+        $queryupdateBlocStatement->execute([":id" => $datab, ":parent" => $value]);
     }
 }
 

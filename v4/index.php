@@ -13,6 +13,8 @@ include("template/templateTop.php");
             header("Location: index.php");
             exit;
         }
+        
+
         $querychampsStatement->execute(["blocs" => $b->bloc]);
         $champs = $querychampsStatement->fetchAll(PDO::FETCH_OBJ);
         if (sizeof($champs) == 0) {
@@ -29,6 +31,26 @@ include("template/templateTop.php");
     ?>
         <form method="POST" action="save.php" id="form">
             <input type="hidden" name="datab" value="<?php echo $_GET["datab"]; ?>">
+            <div class="blocchamps">
+                <label for="parent">Relié à : </label>
+                <select name="parent" id="parent">
+                    <option disabled>-- Choisir le bloc auquel ratacher ses données --</option>
+                    <?php
+                    $querydatabStatement->execute(['bloc' => $bloc->parent]);
+                    $champsParent = $querydatabStatement->fetchAll(PDO::FETCH_OBJ);
+                    if (sizeof($champsParent) > 0) {
+                        foreach ($champsParent as $champ) {
+                            $querydatacStatement->execute(["datab" => $champ->id]);
+                            $c = $querydatacStatement->fetch(PDO::FETCH_OBJ);
+                            $nom = empty($c->value) ? "En cours de création" : $c->value;
+                            $id = empty($c->datab) ? $champ->id : $c->datab;
+                            $selected = ($b->parent == $id) ? "selected" : "";
+                            echo '<option value="'.$id.'" '.$selected.'>'.$nom.'</option>';
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
             <?php
             $html = "";
             foreach ($champs as $champ) {

@@ -47,6 +47,8 @@ $querydatacbubandcStatement = $pdo->prepare($qyerydatacbubandc);
 // Ajout d'un bloc de réponse :
 $queryaddBloc = "INSERT INTO `datab` (`id`, `bloc`) VALUES (NULL, :bloc)";
 $queryaddBlocStatement = $pdo->prepare($queryaddBloc);
+$queryupdateBloc = "UPDATE `datab` SET `parent` = :parent WHERE `datab`.`id` = :id ";
+$queryupdateBlocStatement = $pdo->prepare($queryupdateBloc);
 
 // suppression d'un bloc de réponse :
 $querydeldatacBloc = "DELETE FROM `datac` WHERE datab=:idc";
