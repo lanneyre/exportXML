@@ -6,5 +6,10 @@
             // alert(c.target.getAttribute('dataformat'))
         });
     });
+
+    document.getElementById("save").addEventListener("click", () => {
+        //alert("submit en cours");
+        document.getElementById("form").submit();
+    });
 }
 )();

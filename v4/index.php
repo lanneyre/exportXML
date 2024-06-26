@@ -9,7 +9,7 @@ include("template/templateTop.php");
     } else {
         $querydatabbyidStatement->execute(["id" => $_GET["datab"]]);
         $b = $querydatabbyidStatement->fetch(PDO::FETCH_OBJ);
-        if($b===false){
+        if ($b === false) {
             header("Location: index.php");
             exit;
         }
@@ -27,7 +27,8 @@ include("template/templateTop.php");
         }
         echo "<legend>" . $bloc->nom . "</legend>";
     ?>
-        <form>
+        <form method="POST" action="save.php" id="form">
+            <input type="hidden" name="datab" value="<?php echo $_GET["datab"]; ?>">
             <?php
             $html = "";
             foreach ($champs as $champ) {
@@ -39,7 +40,8 @@ include("template/templateTop.php");
                 <label for="$champ->balise">$champ->nom</label>
                 <input 
                     type="text" 
-                    id="$champ->balise" 
+                    id="$champ->balise"
+                    name="$champ->id"
                     value="$v" 
                     placeholder="$champ->format" 
                     class="champs" 
@@ -54,7 +56,8 @@ HTML;
         <fieldset class="footer">
             <section id="aide">&nbsp; </section>
             <section id="icons">
-                <img src="images/sauvegarder.png" alt="Save">
+                <img src="images/sauvegarder.png" alt="Save" id="save">
+                <img src="images/import.png" alt="Import" id="import">
                 <img src="images/xml.png" alt="xml">
             </section>
         </fieldset>

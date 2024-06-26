@@ -53,3 +53,9 @@ $querydeldatacBloc = "DELETE FROM `datac` WHERE datab=:idc";
 $querydeldatacBlocStatement = $pdo->prepare($querydeldatacBloc);
 $querydeldatabBloc = "DELETE FROM `datab` WHERE id=:idb";
 $querydeldatabBlocStatement = $pdo->prepare($querydeldatabBloc);
+
+//insert datac
+$queryadddatacBloc = "INSERT INTO `datac` (`id`, `datab`, `champ`, `value`, `identifiantBloc`) VALUES (NULL, :datab, :champ, :value, :identifiantBloc) ";
+$queryadddatacBlocStatement = $pdo->prepare($queryadddatacBloc);
+$queryupdatedatacBloc = "UPDATE `datac` SET `value` = :value WHERE `datac`.`datab` = :datab AND `datac`.`champ` = :champ";
+$queryupdatedatacBlocStatement = $pdo->prepare($queryupdatedatacBloc);

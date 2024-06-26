@@ -78,14 +78,21 @@ legend{
     flex-direction: column
 }
 #aide{
-    width: 70% ;
+    width: 80% ;
 }
 #icons{
-    width: 29%;
+    width: 19%;
     display: flex;
+    justify-content: space-between;
+    align-items: start;
 }
 #icons img{
-    width: 50%;
+    width: 30%;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 5px;
+    
+    height: auto;
 }
 
 .footer{
