@@ -36,6 +36,10 @@ $querydatabStatement = $pdo->prepare($qyerydatabSQL);
 $qyerydatabbyidSQL = 'SELECT * FROM `datab` WHERE `id`=:id';
 $querydatabbyidStatement = $pdo->prepare($qyerydatabbyidSQL);
 
+// On récupère tout le contenu de la table datab
+$qyerydatacbyValueSQL = 'SELECT * FROM `datac` WHERE `value` = :val';
+$querydatacbyValueStatement = $pdo->prepare($qyerydatacbyValueSQL);
+
 // On récupère tout le contenu de la table datac
 $qyerydatacSQL = 'SELECT * FROM `datac` WHERE `datab`=:datab AND identifiantBloc = 1' ;
 $querydatacStatement = $pdo->prepare($qyerydatacSQL);

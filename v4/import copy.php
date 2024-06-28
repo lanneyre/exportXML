@@ -110,7 +110,7 @@ foreach ($selectChamps as $key => $champ) {
 // je récupère la première ligne de temp
 $sql = "SELECT * FROM `temp`";
 $state = $pdo->query($sql);
-$lignesTemp = $state->fetchAll(PDO::FETCH_ASSOC);
+$FirstLigneTemp = $state->fetch(PDO::FETCH_ASSOC);
 
 //on créé les premiers blocs
 // Je récupère la liste des champs qui servent d'identifiant aux blocs
@@ -118,44 +118,31 @@ $queryAllChampsIBlocStatement->execute();
 $champsIBloc = $queryAllChampsIBlocStatement->fetchAll(PDO::FETCH_ASSOC);
 //j'initialise le bloc parent à 1
 $parent = 1;
+//pour chaque champs prioritaire 
+foreach ($champsIBloc as $champIBloc) {
+    // si il existe dans la table temp
+    if(!empty($FirstLigneTemp[$champIBloc["id"]])){
+        //creation datab 
+        // Quand je ferai avec tous les lignes il faudra regarder si le parent existe auquel cas il faudra récupérer son id pour l'inserer dans datab et datac
+        // Sinon on le créé comme là 
+        //NB Il faudra créer un bloc n° 31 en même temps que le bloc 10
+        $queryaddwithParentBlocStatement->execute(["bloc"=> $champIBloc["blocs"], "parent" => $parent]);
+        // ne pas oublier de récupérer l'ID
+        $parent = $pdo->lastInsertId();
 
-foreach ($lignesTemp as $ligneTemp) {
-    //pour chaque champs prioritaire 
-    foreach ($champsIBloc as $champIBloc) {
-        // si il existe dans la table temp
-        if (!empty($ligneTemp[$champIBloc["id"]])) {
-            //creation datab 
-            // Quand je ferai avec tous les lignes il faudra regarder si le parent existe auquel cas il faudra récupérer son id pour l'inserer dans datab et datac
+        //creation datac identifiant
+        $queryadddatacBlocStatement->execute(["datab" => $parent, "champ" => $champIBloc["id"], "value" => $FirstLigneTemp[$champIBloc["id"]], "identifiantBloc"=>1]);
 
-            $querydatacbyValueStatement->execute(["val" => $ligneTemp[$champIBloc["id"]]]);
-            $datab = $querydatacbyValueStatement->fetch(PDO::FETCH_OBJ);
-            
-            if($datab !== false){
-                $parent = $datab->datab;
-            } else {
-                // Sinon on le créé comme là 
-                //NB Il faudra créer un bloc n° 31 en même temps que le bloc 10
-                $queryaddwithParentBlocStatement->execute(["bloc" => $champIBloc["blocs"], "parent" => $parent]);
-                // ne pas oublier de récupérer l'ID
-                $parent = $pdo->lastInsertId();
-            }
-            //message($querydatacbyValueStatement->debugDumpParams());
-            //message($parent);
-            
-            //creation datac identifiant
-            $queryadddatacBlocStatement->execute(["datab" => $parent, "champ" => $champIBloc["id"], "value" => $ligneTemp[$champIBloc["id"]], "identifiantBloc" => 1]);
-
-            //creation datac non identifiant
-            // Je récupère tous les champs non prioritaire 
-            $queryAllChampsNOTIBlocStatement->execute(["blocs" => $champIBloc["blocs"]]);
-            $allOtherChamps = $queryAllChampsNOTIBlocStatement->fetchAll(PDO::FETCH_OBJ);
-            // et pour chacun d'entres eu
-            foreach ($allOtherChamps as $key => $value) {
-                # s'il existe dans la table temp
-                if (!empty($ligneTemp[$value->id])) {
-                    // je les insert avec les bonnes valeurs afin qu'ils soient lié au bon datab
-                    $queryadddatacBlocStatement->execute(["datab" => $parent, "champ" => $value->id, "value" => $ligneTemp[$value->id], "identifiantBloc" => 0]);
-                }
+        //creation datac non identifiant
+        // Je récupère tous les champs non prioritaire 
+        $queryAllChampsNOTIBlocStatement->execute(["blocs" => $champIBloc["blocs"]]);
+        $allOtherChamps = $queryAllChampsNOTIBlocStatement->fetchAll(PDO::FETCH_OBJ);
+        // et pour chacun d'entres eu
+        foreach ($allOtherChamps as $key => $value) {
+            # s'il existe dans la table temp
+            if (!empty($FirstLigneTemp[$value->id])) {
+                // je les insert avec les bonnes valeurs afin qu'ils soient lié au bon datab
+                $queryadddatacBlocStatement->execute(["datab" => $parent, "champ" => $value->id, "value" => $FirstLigneTemp[$value->id], "identifiantBloc" => 0]);
             }
         }
     }
@@ -165,17 +152,14 @@ foreach ($lignesTemp as $ligneTemp) {
 
 
 
+$sql = "SELECT * FROM `temp` LIMIT 1, 100000";
+$state = $pdo->query($sql);
+$lignesTemp = $state->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-// $sql = "SELECT * FROM `temp` LIMIT 1, 100000";
-// $state = $pdo->query($sql);
-// $lignesTemp = $state->fetchAll(PDO::FETCH_ASSOC);
-
-// for ($i=0; $i < count($lignesTemp) ; $i++) {
-//     # code...
-//     krsort($lignesTemp[$i]);
-// }
+for ($i=0; $i < count($lignesTemp) ; $i++) {
+    # code...
+    krsort($lignesTemp[$i]);
+}
 
 // foreach ($lignesTemp as $data) {
 //     # code...
