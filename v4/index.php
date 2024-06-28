@@ -6,26 +6,36 @@ include("template/templateTop.php");
     if (empty($_GET["datab"])) {
 
         echo "<legend>Pas de champs disponible</legend>Pour remplir les champs merci de cliquer sur les blocs sur gauche";
+    ?>
+        <h2>Importer un fichier excel</h2>
+        <form action="import.php" method="post" enctype="multipart/form-data" class="import">
+
+            <div class="blocchamps">
+                <label for="excel">Fichier excel</label>
+                <input type="file" id="excel" name="excel" placeholder="Vous pouvez télécharger un fichier modèle" class="champs">
+            </div>
+            <input type="image" src="images/import.png" alt="Import" id="import">
+        </form>
+    <?php
     } else {
         $querydatabbyidStatement->execute(["id" => $_GET["datab"]]);
         $b = $querydatabbyidStatement->fetch(PDO::FETCH_OBJ);
         if ($b === false) {
-            header("Location: index.php");
-            exit;
+            echo '<script>window.location.replace("index.php")</script>';
+            // header("Location: index.php");
+            // exit;
         }
-        
+
 
         $querychampsStatement->execute(["blocs" => $b->bloc]);
         $champs = $querychampsStatement->fetchAll(PDO::FETCH_OBJ);
         if (sizeof($champs) == 0) {
-            header("Location: index.php");
-            exit;
+            echo '<script>window.location.replace("index.php")</script>';
         }
         $queryBlocsbyidStatement->execute(["id" => $b->bloc]);
         $bloc = $queryBlocsbyidStatement->fetch(PDO::FETCH_OBJ);
         if ($bloc === false) {
-            header("Location: index.php");
-            exit;
+            echo '<script>window.location.replace("index.php")</script>';
         }
         echo "<legend>" . $bloc->nom . "</legend>";
     ?>
@@ -45,7 +55,7 @@ include("template/templateTop.php");
                             $nom = empty($c->value) ? "En cours de création" : $c->value;
                             $id = empty($c->datab) ? $champ->id : $c->datab;
                             $selected = ($b->parent == $id) ? "selected" : "";
-                            echo '<option value="'.$id.'" '.$selected.'>'.$nom.'</option>';
+                            echo '<option value="' . $id . '" ' . $selected . '>' . $nom . '</option>';
                         }
                     }
                     ?>

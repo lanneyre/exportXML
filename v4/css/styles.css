@@ -30,12 +30,15 @@ main>section{
     width: 65%;
 }
 
-legend, h3{
+legend, h3, h2{
 
     color: #00008b;
     font-weight: 700;
     display: flex;
     align-items: center;
+}
+h2{
+    margin-top: 20px;
 }
 legend{
     padding: 0 .5rem;
@@ -95,4 +98,13 @@ legend{
 
 .footer{
     display: flex;
+}
+.import{
+    display: flex;
+}
+.import .blocchamps{
+    width: calc(100% - 60px);
+}
+#import{
+    width: 50px;
 }

@@ -3,6 +3,9 @@
 $queryBlocsSQL = 'SELECT * FROM `blocs` WHERE `parent`=:parent';
 $queryBlocsStatement = $pdo->prepare($queryBlocsSQL);
 
+$queryParentBlocsSQL = 'SELECT `parent` FROM `blocs` WHERE `id`=:id';
+$queryParentBlocsStatement = $pdo->prepare($queryParentBlocsSQL);
+
 // On récupère tout le contenu de la table blocs
 $queryBlocsbyidSQL = 'SELECT * FROM `blocs` WHERE `id`=:id';
 $queryBlocsbyidStatement = $pdo->prepare($queryBlocsbyidSQL);
@@ -14,6 +17,13 @@ $querychampsStatement = $pdo->prepare($querychampsSQL);
 // On récupère tout le contenu de la table champs par id
 $querychampbyidSQL = 'SELECT * FROM `champs` WHERE `id`=:id';
 $querychampbyidStatement = $pdo->prepare($querychampbyidSQL);
+
+$queryAllChampsIBlocSQL = 'SELECT * FROM `champs` WHERE `identifiantBloc` = 1 ORDER BY `blocs` ASC';
+$queryAllChampsIBlocStatement = $pdo->prepare($queryAllChampsIBlocSQL);
+
+$queryAllChampsNOTIBlocSQL = 'SELECT * FROM `champs` WHERE `identifiantBloc` = 0 AND `blocs` = :blocs ORDER BY `blocs` ASC';
+$queryAllChampsNOTIBlocStatement = $pdo->prepare($queryAllChampsNOTIBlocSQL);
+
 // On récupère tout le contenu de la table champs par id
 $querychampnombyidSQL = 'SELECT `nom` FROM `champs` WHERE `id`=:id';
 $querychampnombyidStatement = $pdo->prepare($querychampnombyidSQL);
@@ -47,6 +57,10 @@ $querydatacbubandcStatement = $pdo->prepare($qyerydatacbubandc);
 // Ajout d'un bloc de réponse :
 $queryaddBloc = "INSERT INTO `datab` (`id`, `bloc`) VALUES (NULL, :bloc)";
 $queryaddBlocStatement = $pdo->prepare($queryaddBloc);
+
+$queryaddwithParentBloc = "INSERT INTO `datab` (`id`, `bloc`, `parent`) VALUES (NULL, :bloc, :parent)";
+$queryaddwithParentBlocStatement = $pdo->prepare($queryaddwithParentBloc);
+
 $queryupdateBloc = "UPDATE `datab` SET `parent` = :parent WHERE `datab`.`id` = :id ";
 $queryupdateBlocStatement = $pdo->prepare($queryupdateBloc);
 
