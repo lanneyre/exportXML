@@ -59,45 +59,6 @@ $pdo->exec($sql);
  **************************************************************************************************** 
  *****************************************************************************************************/
 
- // problème de remplissage des champs seul le dernier champs est rempli
-/***
-    $selectChampsState = $pdo->query("SELECT * FROM `champs`");
-    $selectChamps = $selectChampsState->fetchAll(PDO::FETCH_OBJ);
-    $champsBlocs = [];
-    foreach ($selectChamps as $key => $champ) {
-        $champsBlocs[$champ->id] = ["bloc"=> $champ->blocs, "ibloc" => $champ->identifiantBloc];
-    }
-
-    function createBlocinBdd($c){
-        global $queryaddwithParentBlocStatement, $queryadddatacBlocStatement, $pdo, $champsBlocs, $queryBlocsbyidStatement;
-        if(empty($_SESSION["datab"])){
-            $_SESSION["datab"] = 1;
-        }
-        $sql = "SELECT DISTINCT `" . $c . "` FROM `temp`";
-        $state = $pdo->query($sql);
-        $tocreate = $state->fetchAll(PDO::FETCH_OBJ);
-        foreach ($tocreate as $valueToCreate) {
-            if($champsBlocs[$c]["ibloc"] == 1){
-                $queryaddwithParentBlocStatement->execute(["bloc" => $champsBlocs[$c]["bloc"], "parent" => $_SESSION["datab"]]);
-                $_SESSION["datab"] = $pdo->lastInsertId();
-            }
-            if($c == 15){
-                message(["datab" => $_SESSION["datab"], "champ" => $c, "value" => $valueToCreate->$c, "identifiantBloc" => $champsBlocs[$c]["ibloc"]]);
-            }
-            $queryadddatacBlocStatement->execute(["datab" => $_SESSION["datab"], "champ" => $c, "value" => $valueToCreate->$c, "identifiantBloc" => $champsBlocs[$c]["ibloc"]]);
-        }
-    }
-    unset($_SESSION["datab"]);
-    $sql = "SHOW COLUMNS FROM `temp`";
-    $state = $pdo->query($sql);
-    $chps = $state->fetchAll(PDO::FETCH_OBJ);
-    foreach ($chps as $champ) {
-        if($champ->Field != "id"){
-            createBlocinBdd($champ->Field); 
-        }
-    }
-*/
-
 //je récupère tous les champs possibles
 $selectChampsState = $pdo->query("SELECT * FROM `champs`");
 $selectChamps = $selectChampsState->fetchAll(PDO::FETCH_OBJ);
@@ -134,15 +95,27 @@ foreach ($lignesTemp as $ligneTemp) {
                 $parent = $datab->datab;
             } else {
                 // Sinon on le créé comme là 
-                //NB Il faudra créer un bloc n° 31 en même temps que le bloc 10
-                $queryaddwithParentBlocStatement->execute(["bloc" => $champIBloc["blocs"], "parent" => $parent]);
-                // ne pas oublier de récupérer l'ID
-                $parent = $pdo->lastInsertId();
+                
+                if ($champIBloc["id"] == 31) {
+                    // ne pas oublier de récupérer l'ID
+                    $parent = $parent31;
+                } else {
+                    //NB Il faudra créer un bloc n° 31 en même temps que le bloc 10
+                    $queryaddwithParentBlocStatement->execute(["bloc" => $champIBloc["blocs"], "parent" => $parent]);
+                    // ne pas oublier de récupérer l'ID
+                    $parent = $pdo->lastInsertId();
+                }
+
+                if($champIBloc["id"] == 10){
+                    $queryaddwithParentBlocStatement->execute(["bloc" => $champsBlocs[31], "parent" => $parent]);
+                    // ne pas oublier de récupérer l'ID
+                    $parent31 = $pdo->lastInsertId();
+                }
+                
             }
-            //message($querydatacbyValueStatement->debugDumpParams());
-            //message($parent);
             
             //creation datac identifiant
+            // message(["datab" => $parent, "champ" => $champIBloc["id"], "value" => $ligneTemp[$champIBloc["id"]], "identifiantBloc" => 1]);
             $queryadddatacBlocStatement->execute(["datab" => $parent, "champ" => $champIBloc["id"], "value" => $ligneTemp[$champIBloc["id"]], "identifiantBloc" => 1]);
 
             //creation datac non identifiant
@@ -161,48 +134,14 @@ foreach ($lignesTemp as $ligneTemp) {
     }
 }
 
-
-
-
-
-
-
-
-// $sql = "SELECT * FROM `temp` LIMIT 1, 100000";
-// $state = $pdo->query($sql);
-// $lignesTemp = $state->fetchAll(PDO::FETCH_ASSOC);
-
-// for ($i=0; $i < count($lignesTemp) ; $i++) {
-//     # code...
-//     krsort($lignesTemp[$i]);
-// }
-
-// foreach ($lignesTemp as $data) {
-//     # code...
-//     //pour chaque ligne 
-//     // J'ai donc une ligne contenant des données à insérer !
-//     $switch = [];
-//     foreach ($data as $key => $value) {  
-//         if($key != "id" && !in_array($key, $switch) ){
-//             //48
-//             $bloc = $champsBlocs[$key];
-//             $querychampsStatement->execute(["bloc"=>$bloc]);
-//             $chpsDuBlocCourant = $querychampsStatement->fetchAll(PDO::FETCH_ASSOC);
-            
-//         }
-//     }
-// }
-
-// message($lignesTemp);
-
 /****************************************************************************************************
  **************************************************************************************************** 
  **************************************************************************************************** 
  *****************************************************************************************************/
 
-// on supprime la table temporaire 
-// $sqld = "DROP TABLE `temp`";
-// $pdo->exec($sqld);
+//on supprime la table temporaire 
+$sqld = "DROP TABLE `temp`";
+$pdo->exec($sqld);
 
-// header("Location: index.php?ok");
-// exit;
+header("Location: index.php?ok");
+exit;

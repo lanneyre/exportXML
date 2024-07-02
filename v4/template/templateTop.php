@@ -12,10 +12,9 @@ include("includes/top.inc.php");
 </head>
 
 <body>
+    <h1>Générateur de fichier xml pour la caisse des dépots</h1>
     <main>
         <aside>
-            <?php echo aside(); ?> 
+            <?php echo aside(); ?>
         </aside>
         <section>
-            
-        

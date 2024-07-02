@@ -37,7 +37,7 @@ $qyerydatabbyidSQL = 'SELECT * FROM `datab` WHERE `id`=:id';
 $querydatabbyidStatement = $pdo->prepare($qyerydatabbyidSQL);
 
 // On récupère tout le contenu de la table datab
-$qyerydatacbyValueSQL = 'SELECT * FROM `datac` WHERE `value` = :val';
+$qyerydatacbyValueSQL = 'SELECT * FROM `datac` WHERE `value` = :val AND `champ` <> 31';
 $querydatacbyValueStatement = $pdo->prepare($qyerydatacbyValueSQL);
 
 // On récupère tout le contenu de la table datac
@@ -51,6 +51,9 @@ $querydatacbyBlocStatement = $pdo->prepare($qyerydatacSQLbyBloc);
 // On récupère tout le contenu de la table datac by id
 $qyerydatacbyidSQL = 'SELECT * FROM `datac` WHERE `id`=:id';
 $querydatacbyidStatement = $pdo->prepare($qyerydatacbyidSQL);
+
+$qyerydatabbyParentSQL = 'SELECT * FROM `datab` WHERE `parent`=:parent AND `bloc`=:bloc';
+$querydatabbyParentStatement = $pdo->prepare($qyerydatabbyParentSQL);
 
 
 // On récupère tout le contenu de la table datab by datab et champ
@@ -79,3 +82,6 @@ $queryadddatacBloc = "INSERT INTO `datac` (`id`, `datab`, `champ`, `value`, `ide
 $queryadddatacBlocStatement = $pdo->prepare($queryadddatacBloc);
 $queryupdatedatacBloc = "UPDATE `datac` SET `value` = :value WHERE `datac`.`datab` = :datab AND `datac`.`champ` = :champ";
 $queryupdatedatacBlocStatement = $pdo->prepare($queryupdatedatacBloc);
+
+
+$queryUpdateChamps31Statement = $pdo->prepare("UPDATE `datac` SET `value` = :value WHERE `datac`.`champ` = 31 ");

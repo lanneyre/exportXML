@@ -44,9 +44,18 @@ function blocsaside($b){
                     $c = $querydatacStatement->fetch(PDO::FETCH_OBJ);
                     $nom = empty($c->value) ? "En cours de création" : $c->value;
                     $id = empty($c->datab) ? $champ->id : $c->datab;
-                    $html .= <<<HTML
+                    if ($champ->bloc ==  7) {
+                        $querydatacStatement->execute(["datab" => $champ->parent]);
+                        $p = $querydatacStatement->fetch(PDO::FETCH_OBJ);
+                        $html .= <<<HTML
+                    <a href="index.php?datab=$id">$p->value - $nom</a> <a href="delbloc.php?id=$id" class="moins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#00008B" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg></a>  <br>
+HTML;
+                    } else {
+                        $html .= <<<HTML
                     <a href="index.php?datab=$id">$nom</a> <a href="delbloc.php?id=$id" class="moins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#00008B" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232H328c13.3 0 24 10.7 24 24s-10.7 24-24 24H184c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg></a>  <br>
-HTML;                  
+HTML;
+                    }
+                     
                 }
             }           
         }

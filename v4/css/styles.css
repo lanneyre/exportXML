@@ -30,7 +30,7 @@ main>section{
     width: 65%;
 }
 
-legend, h3, h2{
+legend, h3, h2, h1, h4{
 
     color: #00008b;
     font-weight: 700;
@@ -81,10 +81,10 @@ legend{
     flex-direction: column
 }
 #aide{
-    width: 80% ;
+    width: 85% ;
 }
 #icons{
-    width: 19%;
+    width: 14%;
     display: flex;
     justify-content: space-between;
     align-items: start;
@@ -107,4 +107,8 @@ legend{
 }
 #import{
     width: 50px;
+}
+footer.enfants{
+    display: flex;
+    justify-content: space-around;
 }

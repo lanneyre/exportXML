@@ -11,5 +11,18 @@
         //alert("submit en cours");
         document.getElementById("form").submit();
     });
+
+    let champsMoins = document.querySelectorAll('.moins')
+    champsMoins.forEach(moins => {
+        moins.addEventListener("click", (c) => {
+            //c.preventDefault();
+            if(confirm("Êtes vous sûr de vouloir supprimer cet élément ?")){
+                return true;
+            } 
+            c.preventDefault();
+            return false;
+        })
+    });
+
 }
 )();
