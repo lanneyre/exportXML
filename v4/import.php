@@ -59,14 +59,7 @@ $pdo->exec($sql);
  **************************************************************************************************** 
  *****************************************************************************************************/
 
-//je récupère tous les champs possibles
-$selectChampsState = $pdo->query("SELECT * FROM `champs`");
-$selectChamps = $selectChampsState->fetchAll(PDO::FETCH_OBJ);
-$champsBlocs = [];
-//j'associe un id de champ à un bloc afin de gagner du temps : je saurait immédiatement dans quel blocs mettre un champs
-foreach ($selectChamps as $key => $champ) {
-    $champsBlocs[$champ->id] = $champ->blocs;
-}
+
 
 // je récupère la première ligne de temp
 $sql = "SELECT * FROM `temp`";

@@ -96,6 +96,16 @@ legend{
     border-radius: 5px;
 }
 
+#icons.home{
+    width: 100%;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+#icons.home img{
+    width: 10%;
+}
+
 .footer{
     display: flex;
 }

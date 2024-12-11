@@ -60,6 +60,12 @@ $querydatabbyParentStatement = $pdo->prepare($qyerydatabbyParentSQL);
 $qyerydatacbubandc = 'SELECT * FROM `datac` WHERE `datab`=:datab AND `champ`=:champ';
 $querydatacbubandcStatement = $pdo->prepare($qyerydatacbubandc);
 
+$queryEtudiants = 'SELECT * FROM `datac` WHERE `champ`=:champ';
+$queryEtudiantsStatement = $pdo->prepare($queryEtudiants);
+
+$querydatacSansIDsql = 'SELECT * FROM `datac` WHERE `datab`=:datab';
+$querydatacSansIDStatement = $pdo->prepare($querydatacSansIDsql);
+
 
 // Ajout d'un bloc de réponse :
 $queryaddBloc = "INSERT INTO `datab` (`id`, `bloc`) VALUES (NULL, :bloc)";
@@ -85,3 +91,15 @@ $queryupdatedatacBlocStatement = $pdo->prepare($queryupdatedatacBloc);
 
 
 $queryUpdateChamps31Statement = $pdo->prepare("UPDATE `datac` SET `value` = :value WHERE `datac`.`champ` = 31 ");
+
+
+//je récupère tous les champs possibles
+$selectChampsState = $pdo->query("SELECT * FROM `champs`");
+$selectChamps = $selectChampsState->fetchAll(PDO::FETCH_OBJ);
+$champsBlocs = [];
+$champsBalise = [];
+//j'associe un id de champ à un bloc afin de gagner du temps : je saurait immédiatement dans quel blocs mettre un champs
+foreach ($selectChamps as $key => $champ) {
+    $champsBlocs[$champ->id] = $champ->blocs;
+    $champsBalise[$champ->id] = "cpf:".$champ->balise;
+}

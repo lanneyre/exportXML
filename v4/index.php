@@ -16,6 +16,10 @@ include("template/templateTop.php");
             </div>
             <input type="image" src="images/import.png" alt="Import" id="import">
         </form>
+
+        <section id="icons" class="home">
+            <img src="images/xml.png" alt="xml">
+        </section>
     <?php
     } else {
         $querydatabbyidStatement->execute(["id" => $_GET["datab"]]);
@@ -99,7 +103,7 @@ HTML;
                 'parent' => $b->bloc
             ]);
             $blocs = $queryBlocsStatement->fetchAll(PDO::FETCH_OBJ);
-                
+
             foreach ($blocs as $bloc) {
                 echo "<div>";
                 echo "<h4>$bloc->nom</h4>";
@@ -130,10 +134,10 @@ HTML;
                     // echo $champ->value . "<br>";
                     // message($champs);
                     // foreach ($champs as $champ) {
-                        
+
                     // }
                 }
-               
+
                 echo "</div>";
             }
             ?>
